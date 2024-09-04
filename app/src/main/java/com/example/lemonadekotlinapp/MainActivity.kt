@@ -19,9 +19,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -32,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,12 +48,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LemonadeKotlinAppTheme {
-                LemonadeKotlinApp(context = this)
+               LemonadeKotlinApp(context = this)
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LemonadeKotlinApp(modifier: Modifier = Modifier
     .fillMaxSize()
@@ -73,34 +79,59 @@ fun LemonadeKotlinApp(modifier: Modifier = Modifier
         else -> R.string.lemon_tree_tip
     }
 
-    Column (modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally){
-        Button(onClick = {
-            if(result == 1){
+Scaffold (
+    topBar = {
+        CenterAlignedTopAppBar(
+            title = {
+                Text(
+                    text = "Lemonade",
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            colors = TopAppBarDefaults.largeTopAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+            )
+        )
+    },
+
+) { innerPadding -> Column(
+    modifier = modifier.padding(innerPadding),
+    horizontalAlignment = Alignment.CenterHorizontally
+) {
+    Button(
+        onClick = {
+            if (result == 1) {
                 result = 2;
                 squeezeCount = (2..4).random()
-            }
-            else if (result == 2){
+            } else if (result == 2) {
                 squeezeCount--
                 if (squeezeCount == 0) {
                     result = 3
                 }
-            }
-            else if (result == 3){
+            } else if (result == 3) {
                 result = 4;
-            }
-            else if (result == 4){
+            } else if (result == 4) {
                 result = 1;
             }
 
 
-        }, shape = RoundedCornerShape(16),    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)) {
-            Image(painter = painterResource(id = imageResource), contentDescription = textResource.toString())
-        }
-        Spacer(modifier = Modifier.height(32
-            .dp))
-        Text(text = context.getString(textResource),  fontSize = 18.sp)
+        },
+        shape = RoundedCornerShape(16),
+        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
+    ) {
+        Image(
+            painter = painterResource(id = imageResource),
+            contentDescription = textResource.toString()
+        )
     }
+    Spacer(
+        modifier = Modifier.height(
+            32
+                .dp
+        )
+    )
+    Text(text = context.getString(textResource), fontSize = 18.sp)
+}}
 }
 
 @Preview(showBackground = true)
